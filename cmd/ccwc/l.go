@@ -32,15 +32,16 @@ var lCmd = &cobra.Command{
 }
 
 func getFileLine(path string) (int64, error) {
-	//info, err := os.Stat(path)
-	//if err != nil {
-	//	return 0, err
-	//}
 	file, err := os.Open(path)
 	if err != nil {
 		return 0, err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			_ = fmt.Errorf("please input right file path")
+		}
+	}(file)
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
 	var count int
