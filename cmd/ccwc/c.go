@@ -8,8 +8,6 @@ import (
 	"strconv"
 )
 
-var cmd = &cobra.Command{}
-
 func init() {
 	rootCmd.AddCommand(cCmd)
 }
