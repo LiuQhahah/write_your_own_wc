@@ -16,10 +16,20 @@ var lCmd = &cobra.Command{
 	Use:   "l",
 	Short: "option -l that outputs the number of lines in a file",
 	Long:  `option -l that outputs the number of lines in a file.`,
-	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) != 1 {
-			_ = fmt.Errorf("please input right file path")
+			scanner := bufio.NewScanner(os.Stdin)
+			var count int
+
+			for scanner.Scan() {
+				count += 1
+			}
+			if scanner.Err() != nil {
+				fmt.Printf("Error reading input: %s\n", scanner.Err())
+				return
+			}
+			fmt.Println("size:" + strconv.FormatInt(int64(count), 10))
+
 		} else {
 			fmt.Println("l called, arg:", args)
 			lines, err := getFileLine(args[0])
@@ -27,7 +37,9 @@ var lCmd = &cobra.Command{
 				_ = fmt.Errorf("please input right file path")
 			}
 			fmt.Println("size:" + strconv.FormatInt(lines, 10))
+
 		}
+
 	},
 }
 
